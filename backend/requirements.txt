@@ -1,0 +1,10 @@
+flask
+flask-cors
+flask-sqlalchemy
+pymysql
+cryptography
+anthropic
+python-docx
+requests
+python-dotenv
+matplotlib
