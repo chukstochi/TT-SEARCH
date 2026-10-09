@@ -234,7 +234,12 @@ textarea.ed { min-height: 420px; line-height: 1.6; }
   display: flex; flex-direction: column; align-items: center; justify-content: center;
   padding: 32px 16px;
 }
-.auth-logo { font-size: 28px; text-align: center; }
+.auth-logo { font-size: 48px; line-height: 1; text-align: center; }
+.auth-logo small { font-size: 16px; letter-spacing: .5px; margin-top: 10px; color: #e5e7eb; }
+.auth-card h3 { margin-top: 0; font-size: 22px; }
+.auth-card .btn { width: 100%; }
+/* ".hero p" greys out paragraphs, so this needs the extra ".auth-card" to win and be readable */
+.auth-card .link-orange { margin: 18px 0 0; max-width: none; text-align: center; font-size: 15px; font-weight: 600; color: #c2410c; text-decoration: underline; }
 .auth-card { width: 100%; max-width: 380px; margin: 30px auto 0; color: #111; }
 
 /* ---------- university search box ---------- */
