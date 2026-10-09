@@ -1,9 +1,11 @@
 flask
+flask-cors
+flask-sqlalchemy
 python-dotenv
-pymysql
-cryptography
-feedparser
-google-genai
+python-docx
 requests
+itsdangerous
+anthropic
+matplotlib
+pymysql
 gunicorn
-tweepy
