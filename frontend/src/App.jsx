@@ -10,9 +10,9 @@ function UniversityInput({ value, onChange }) {
   const matches = open ? searchUniversities(value) : [];
   const pick = (u) => { onChange(u); setOpen(false); };
   return (
-    <div style={{ position: "relative", flex: 1, minWidth: 180 }}>
+    <div className="uni">
       <input
-        style={{ width: "100%" }}
+        className="uni-input"
         value={value}
         placeholder="Start typing your university e.g. unilag"
         autoComplete="off"
@@ -28,10 +28,10 @@ function UniversityInput({ value, onChange }) {
         }}
       />
       {matches.length > 0 && (
-        <div style={{ position: "absolute", left: 0, right: 0, top: "100%", zIndex: 20, background: "#fff", color: "#111", border: "1px solid #d1d5db", borderRadius: 8, marginTop: 4, boxShadow: "0 8px 24px rgba(0,0,0,.15)", maxHeight: 280, overflowY: "auto" }}>
+        <div className="uni-list">
           {matches.map((u, i) => (
             <div key={u} onMouseDown={() => pick(u)} onMouseEnter={() => setHi(i)}
-              style={{ padding: "9px 12px", cursor: "pointer", background: i === hi ? "#fff3e8" : "transparent" }}>{u}</div>
+              className={"uni-item" + (i === hi ? " on" : "")}>{u}</div>
           ))}
         </div>
       )}
@@ -147,7 +147,7 @@ export default function App() {
       <div className="shell"><div className="side">
         <div className="logo" onClick={() => setView("home")}>T<b>T</b><small>Search Made Easy</small></div>
         {[["home","Find Topics"],["projects","My Projects"],["library","Library"],["dash","Dashboard"]].map(([k,l]) => <div key={k} className={"si " + (view===k?"on":"")} onClick={() => setView(k)}>{l}</div>)}
-        <div className="si" style={{marginTop:24}}>{name}</div>
+        <div className="si mt-24">{name}</div>
         <div className="si" onClick={() => { localStorage.clear(); sessionStorage.clear(); location.hash = ""; location.reload(); }}>Logout</div>
       </div><div className="main">
       {NEEDS_PROJECT.includes(view) && !project && <div className="wrap"><p>Loading…</p></div>}
@@ -162,7 +162,7 @@ export default function App() {
             <h1>Find & Build Your University <span>Project</span></h1>
             <p>Tailored topics, complete research roadmaps and a full project document — from BSc to PhD.</p>
           </div>
-          <div className="wrap" style={{ marginTop: -40 }}>
+          <div className="wrap pull-up">
             <div className="card">
               <div className="tabs">
                 <div className={"tab " + (tab === "find" ? "on" : "")} onClick={() => setTab("find")}>Find Topics</div>
@@ -186,16 +186,16 @@ export default function App() {
                 <UniversityInput value={form.university} onChange={(u) => setForm((f) => ({ ...f, university: u }))} />
               </div>
               {tab === "find" ? (
-                <div className="row" style={{ marginTop: 10 }}>
-                  <input value={form.interest} onChange={set("interest")} placeholder="Interest e.g. Artificial Intelligence + Healthcare" style={{ flex: 3 }} />
+                <div className="row mt-10">
+                  <input value={form.interest} onChange={set("interest")} placeholder="Interest e.g. Artificial Intelligence + Healthcare" className="flex-3" />
                   <button className="btn" disabled={busy} onClick={() => run(async () => { setTopics((await api("/topics", form)).topics); setView("topics"); })}>{busy ? "Generating…" : "Search"}</button>
                 </div>
               ) : (
                 <>
-                  <textarea rows={3} style={{ marginTop: 10 }} placeholder="Paste your proposed topic" value={check.topic} onChange={(e) => setCheck({ ...check, topic: e.target.value })} />
-                  <button className="btn" style={{ marginTop: 10 }} disabled={busy} onClick={() => run(async () => setCheck({ ...check, result: await api("/check-topic", { ...form, topic: check.topic }) }))}>{busy ? "Checking…" : "Check Topic"}</button>
+                  <textarea rows={3} className="mt-10" placeholder="Paste your proposed topic" value={check.topic} onChange={(e) => setCheck({ ...check, topic: e.target.value })} />
+                  <button className="btn mt-10" disabled={busy} onClick={() => run(async () => setCheck({ ...check, result: await api("/check-topic", { ...form, topic: check.topic }) }))}>{busy ? "Checking…" : "Check Topic"}</button>
                   {check.result && (
-                    <div className="card" style={{ marginTop: 12 }}>
+                    <div className="card mt-12">
                       <h3>{{ Strong: "🟢", "Needs modification": "🟡" }[check.result.verdict] || "🔴"} {check.result.verdict}</h3>
                       <p>{check.result.strength}</p><p><b>Gap:</b> {check.result.research_gap}</p><p><b>Feasibility:</b> {check.result.feasibility}</p>
                       <b>Better titles</b><ol>{check.result.suggestions?.map((s) => <li key={s}>{s}</li>)}</ol>
@@ -213,15 +213,15 @@ export default function App() {
         <div className="wrap">
           <button className="btn ghost" onClick={() => setView("home")}>← Back</button>
           <h2>Project Topics — {form.level}, {form.department}</h2>
-          <p style={{ color: "#6b7280" }}>{topics.length} topics found. Choose one to see the preview.</p>
+          <p className="muted">{topics.length} topics found. Choose one to see the preview.</p>
           {err && <div className="err">{err}</div>}
           {topics.map((t, i) => (
             <div key={i} className="card topic" onClick={() => run(async () => { setProject(await api("/projects", { ...form, topic: t })); setView("project"); })}>
-              <div style={{ display: "flex", justifyContent: "space-between" }}>
+              <div className="topic-head">
                 <b>{i + 1}. {t.title}</b><span><span className="pill g">{t.relevance} Relevance</span><span className={"pill " + t.difficulty}>{t.difficulty}</span></span>
               </div>
               <p>{t.description}</p>{t.tags?.map((x) => <span className="pill" key={x}>{x}</span>)}
-              <div><button className="btn ghost" style={{ marginTop: 8 }} onClick={(e) => { e.stopPropagation(); api("/library", { ...form, topic: t }).then(() => setErr("Saved to Library ✓")); }}>☆ Save</button></div>
+              <div><button className="btn ghost mt-8" onClick={(e) => { e.stopPropagation(); api("/library", { ...form, topic: t }).then(() => setErr("Saved to Library ✓")); }}>☆ Save</button></div>
             </div>
           ))}
           {busy && <p>Building your project preview…</p>}
@@ -238,11 +238,11 @@ export default function App() {
             <p><b>Technologies:</b> {project.topic.technologies?.join(", ")}</p>
           </div>
           <div className="card"><h3>Research Roadmap</h3>
-            {project.sections.map((s, i) => <div className="road" key={s}><div className="num">{i + 1}</div>{s}<span style={{ marginLeft: "auto", color: "#6b7280" }}>{i === 0 ? "Preview" : project.paid ? "Ready" : "🔒 Locked"}</span></div>)}
+            {project.sections.map((s, i) => <div className="road" key={s}><div className="num">{i + 1}</div>{s}<span className="road-status">{i === 0 ? "Preview" : project.paid ? "Ready" : "🔒 Locked"}</span></div>)}
           </div>
           <div className="card"><h3>Chapter 1 — Preview</h3>
-            <div style={{ whiteSpace: "pre-wrap" }}>{project.excerpt}</div>
-            <div className="blur" style={{ marginTop: 8 }}>Chapter 1 continues with the scope, definitions, significance and the remaining chapters of the complete project document…</div>
+            <div className="pre-wrap">{project.excerpt}</div>
+            <div className="blur mt-8">Chapter 1 continues with the scope, definitions, significance and the remaining chapters of the complete project document…</div>
           </div>
           <div className="lock">
             {project.paid ? (
@@ -272,16 +272,16 @@ function Auth({ onDone }) {
     } catch (e) { setErr(e.message); }
   };
   return (
-    <div className="hero" style={{ minHeight: "100vh" }}>
-      <div className="logo" style={{ fontSize: 28 }}>T<b>T</b><small>Search Made Easy</small></div>
-      <div className="card" style={{ maxWidth: 380, marginTop: 30, color: "#111" }}>
+    <div className="hero auth-hero">
+      <div className="logo auth-logo">T<b>T</b><small>Search Made Easy</small></div>
+      <div className="card auth-card">
         <h3>{mode === "login" ? "Log in" : "Create account"}</h3>
         {mode === "register" && <input placeholder="Full name" onChange={(e) => setF({ ...f, name: e.target.value })} />}
-        <input style={{ marginTop: 8 }} placeholder="Email" onChange={(e) => setF({ ...f, email: e.target.value })} />
-        <input style={{ margin: "8px 0" }} type="password" placeholder="Password" onChange={(e) => setF({ ...f, password: e.target.value })} />
+        <input className="mt-8" placeholder="Email" onChange={(e) => setF({ ...f, email: e.target.value })} />
+        <input className="my-8" type="password" placeholder="Password" onChange={(e) => setF({ ...f, password: e.target.value })} />
         {err && <div className="err">{err}</div>}
         <button className="btn" onClick={submit}>{mode === "login" ? "Log in" : "Sign up"}</button>
-        <p style={{ cursor: "pointer", color: "#f97316" }} onClick={() => setMode(mode === "login" ? "register" : "login")}>{mode === "login" ? "New here? Sign up" : "Have an account? Log in"}</p>
+        <p className="link-orange" onClick={() => setMode(mode === "login" ? "register" : "login")}>{mode === "login" ? "New here? Sign up" : "Have an account? Log in"}</p>
       </div>
     </div>
   );

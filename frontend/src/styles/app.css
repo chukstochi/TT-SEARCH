@@ -1,0 +1,248 @@
+/* =====================================================================
+   app.css - small helper classes and the university search box.
+   Edit colours/spacing here instead of inside App.jsx.
+   ===================================================================== */
+
+:root {
+  --orange: #f97316;
+  --orange-soft: #fff3e8;
+  --muted: #6b7280;
+  --border: #d1d5db;
+  --text: #111;
+}
+
+/* ---------- spacing helpers ---------- */
+.mt-8  { margin-top: 8px; }
+.mt-10 { margin-top: 10px; }
+.mt-12 { margin-top: 12px; }
+.mt-24 { margin-top: 24px; }
+.my-8  { margin: 8px 0; }
+.pull-up { margin-top: -40px; }   /* lifts the search card over the hero banner */
+.flex-3 { flex: 3; }
+
+/* ---------- text helpers ---------- */
+.muted { color: var(--muted); }
+.pre-wrap { white-space: pre-wrap; }
+.link-orange { cursor: pointer; color: var(--orange); }
+
+/* ---------- topic cards and roadmap ---------- */
+.topic-head { display: flex; justify-content: space-between; }
+.road-status { margin-left: auto; color: var(--muted); }
+
+/* ---------- login page ---------- */
+.auth-hero { min-height: 100vh; }
+.auth-logo { font-size: 28px; }
+.auth-card { max-width: 380px; margin-top: 30px; color: var(--text); }
+
+/* ---------- university search box ---------- */
+.uni { position: relative; flex: 1; min-width: 180px; }
+.uni-input { width: 100%; }
+.uni-list {
+  position: absolute; left: 0; right: 0; top: 100%; z-index: 20;
+  background: #fff; color: var(--text);
+  border: 1px solid var(--border); border-radius: 8px;
+  margin-top: 4px; box-shadow: 0 8px 24px rgba(0, 0, 0, .15);
+  max-height: 280px; overflow-y: auto;
+}
+.uni-item { padding: 9px 12px; cursor: pointer; background: transparent; }
+.uni-item.on { background: var(--orange-soft); }
+
+
+/* =====================================================================
+   01-base.css - colours, resets, page background, form fields, copy-protection.
+   Change the site colours here (the --variables) and they update everywhere.
+   ===================================================================== */
+
+:root {
+  --o: #f97316;          /* main orange */
+  --dark: #111418;       /* nav and sidebar background */
+  --bg: #f6f7f9;         /* page background */
+  --card: #fff;
+  --line: #e5e7eb;       /* borders */
+  --mut: #6b7280;        /* grey helper text */
+  --o-soft: #fff7ed;     /* light orange tint */
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: Inter, system-ui, sans-serif;
+  background: var(--bg);
+  color: #111;
+  /* anti-copy: text cannot be selected (form fields are re-enabled below) */
+  -webkit-user-select: none; user-select: none; -webkit-touch-callout: none;
+}
+
+/* ---------- form fields ---------- */
+input, textarea, select { -webkit-user-select: text; user-select: text; } /* forms stay usable */
+input, select, textarea {
+  padding: 11px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  font: inherit;
+  width: 100%;
+}
+
+/* ---------- copy protection ---------- */
+img { -webkit-user-drag: none; pointer-events: none; }
+@media print { body { display: none !important; } }
+
+
+/* =====================================================================
+   02-layout.css - page frame: top nav, hero banner, sidebar, content width,
+   logo and the faint watermark.
+   ===================================================================== */
+
+/* ---------- top nav ---------- */
+.nav {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 14px 32px; background: var(--dark); color: #fff;
+}
+
+/* ---------- logo ---------- */
+.logo { font-weight: 800; font-size: 20px; }
+.logo b { color: var(--o); }
+.logo small { display: block; font-size: 10px; font-weight: 400; color: #9ca3af; }
+
+/* ---------- hero banner ---------- */
+.hero {
+  background: linear-gradient(120deg, #0b0d10, #2a1a0e);
+  color: #fff; padding: 80px 32px 60px;
+}
+.hero h1 { font-size: 46px; margin: 0 0 14px; max-width: 560px; }
+.hero h1 span { color: var(--o); }
+.hero p { max-width: 520px; color: #d1d5db; }
+
+/* ---------- content width ---------- */
+.wrap { max-width: 1000px; margin: 0 auto; padding: 28px 20px; }
+
+/* ---------- sidebar + main ---------- */
+.shell { display: flex; min-height: 100vh; }
+.side { width: 200px; background: var(--dark); color: #fff; padding: 18px 12px; flex-shrink: 0; }
+.side .logo { margin: 0 6px 24px; }
+.si { padding: 10px 12px; border-radius: 8px; cursor: pointer; color: #d1d5db; margin-bottom: 4px; }
+.si.on { background: var(--o); color: #fff; }
+.main { flex: 1; min-width: 0; }
+
+/* ---------- watermark (user's name faintly tiled over the page) ---------- */
+.wm {
+  position: fixed; inset: 0; pointer-events: none; z-index: 50; opacity: .05;
+  font-weight: 800; font-size: 40px; display: flex; flex-wrap: wrap;
+  overflow: hidden; transform: rotate(-20deg);
+}
+
+/* ---------- small screens ---------- */
+@media (max-width: 800px) {
+  .side { width: 70px; }
+  .si { font-size: 11px; }
+}
+
+
+/* =====================================================================
+   03-components.css - reusable pieces: buttons, cards, rows, tabs, pills,
+   topic cards, roadmap, locked box, progress bar, stats.
+   ===================================================================== */
+
+/* ---------- buttons ---------- */
+.btn { background: var(--o); color: #fff; border: 0; border-radius: 8px; padding: 11px 20px; font-weight: 600; cursor: pointer; }
+.btn.ghost { background: transparent; border: 1px solid var(--line); color: #111; }
+.btn:disabled { opacity: .5; }
+
+/* ---------- cards and form rows ---------- */
+.card { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 18px; margin-bottom: 14px; }
+.row { display: flex; gap: 10px; flex-wrap: wrap; }
+.row > * { flex: 1; min-width: 140px; }
+
+/* ---------- tabs ---------- */
+.tabs { display: flex; gap: 6px; margin-bottom: 14px; }
+.tab { padding: 8px 16px; border-radius: 20px; border: 1px solid var(--line); background: #fff; cursor: pointer; }
+.tab.on { background: var(--o); color: #fff; border-color: var(--o); }
+
+/* ---------- pills / tags ---------- */
+.pill { font-size: 11px; padding: 3px 9px; border-radius: 12px; background: #f3f4f6; margin-right: 6px; }
+.pill.g { background: #dcfce7; color: #166534; }
+.pill.Easy { color: #166534; }
+.pill.Medium { color: #b45309; }
+.pill.Hard { color: #b91c1c; }
+
+/* ---------- topic cards ---------- */
+.topic { cursor: pointer; }
+.topic:hover { border-color: var(--o); }
+
+/* ---------- locked preview ---------- */
+.blur { filter: blur(5px); pointer-events: none; }
+.lock { text-align: center; padding: 16px; background: var(--o-soft); border: 1px dashed var(--o); border-radius: 10px; }
+
+/* ---------- research roadmap list ---------- */
+.road { display: flex; gap: 10px; align-items: center; padding: 10px 0; border-bottom: 1px solid var(--line); cursor: pointer; }
+.road.cur { background: var(--o-soft); cursor: pointer; }
+.num { width: 28px; height: 28px; border-radius: 50%; background: var(--o-soft); color: var(--o); display: grid; place-items: center; font-weight: 700; }
+
+/* ---------- messages ---------- */
+.err { color: #b91c1c; margin: 8px 0; }
+
+/* ---------- progress bar and stat tiles ---------- */
+.bar { height: 10px; background: #e5e7eb; border-radius: 6px; overflow: hidden; }
+.bar > div { height: 100%; background: var(--o); transition: width .5s; }
+.stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; }
+.stat b { font-size: 28px; display: block; }
+
+
+
+/* =====================================================================
+   04-workspace.css - the project workspace screen: three columns, editor,
+   tool buttons and diagrams.
+   ===================================================================== */
+
+.work { display: grid; grid-template-columns: 230px 1fr 170px; gap: 14px; }
+textarea.ed { min-height: 420px; line-height: 1.6; }
+.tool { display: block; width: 100%; margin-bottom: 8px; }
+.fig { width: 100%; border: 1px solid var(--line); border-radius: 8px; margin: 10px 0; }
+
+@media (max-width: 800px) {
+  .work { grid-template-columns: 1fr; }
+}
+
+
+
+/* =====================================================================
+   05-helpers.css - small helper classes and the university search box.
+   Loaded last on purpose, so these always win over the files before it.
+   ===================================================================== */
+
+/* ---------- spacing helpers ---------- */
+.mt-8  { margin-top: 8px; }
+.mt-10 { margin-top: 10px; }
+.mt-12 { margin-top: 12px; }
+.mt-24 { margin-top: 24px; }
+.my-8  { margin: 8px 0; }
+.pull-up { margin-top: -40px; }   /* lifts the search card over the hero banner */
+.flex-3 { flex: 3; }
+
+/* ---------- text helpers ---------- */
+.muted { color: var(--mut); }
+.pre-wrap { white-space: pre-wrap; }
+.link-orange { cursor: pointer; color: var(--o); }
+
+/* ---------- topic cards and roadmap ---------- */
+.topic-head { display: flex; justify-content: space-between; }
+.road-status { margin-left: auto; color: var(--mut); }
+
+/* ---------- login page ---------- */
+.auth-hero { min-height: 100vh; }
+.auth-logo { font-size: 28px; }
+.auth-card { max-width: 380px; margin-top: 30px; color: #111; }
+
+/* ---------- university search box ---------- */
+.uni { position: relative; flex: 1; min-width: 180px; }
+.uni-input { width: 100%; }
+.uni-list {
+  position: absolute; left: 0; right: 0; top: 100%; z-index: 20;
+  background: #fff; color: #111;
+  border: 1px solid #d1d5db; border-radius: 8px;
+  margin-top: 4px; box-shadow: 0 8px 24px rgba(0, 0, 0, .15);
+  max-height: 280px; overflow-y: auto;
+}
+.uni-item { padding: 9px 12px; cursor: pointer; background: transparent; }
+.uni-item.on { background: #fff3e8; }
