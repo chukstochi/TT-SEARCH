@@ -78,14 +78,16 @@ export default function App() {
   const [otherDept, setOtherDept] = useState(() => !ALL_COURSES.includes(readSaved("tt_form", { department: "Computer Science" }).department));
   const [topics, setTopics] = useState(() => readSaved("tt_topics", []));
   const [project, setProject] = useState(null);
-  const [tab, setTab] = useState("find");
-  const [check, setCheck] = useState({ topic: "", result: null });
+  const [tab, setTab] = useState(() => readSaved("tt_tab", "find"));
+  const [check, setCheck] = useState(() => ({ topic: readSaved("tt_check_topic", ""), result: null }));
   const [busy, setBusy] = useState(false);
   const [err, setErr] = useState("");
 
   // keep the form and topic list across reloads
   useEffect(() => { try { sessionStorage.setItem("tt_form", JSON.stringify(form)); } catch {} }, [form]);
   useEffect(() => { try { sessionStorage.setItem("tt_topics", JSON.stringify(topics)); } catch {} }, [topics]);
+  useEffect(() => { try { sessionStorage.setItem("tt_tab", JSON.stringify(tab)); } catch {} }, [tab]);
+  useEffect(() => { try { sessionStorage.setItem("tt_check_topic", JSON.stringify(check.topic)); } catch {} }, [check.topic]);
 
   // ---- anti-copy (deterrent only; real protection is server-side preview limits) ----
   useEffect(() => {
@@ -263,12 +265,16 @@ export default function App() {
 }
 
 function Auth({ onDone }) {
-  const [mode, setMode] = useState("login");
-  const [f, setF] = useState({ name: "", email: "", password: "" });
+  const saved = readSaved("tt_auth", {});
+  const [mode, setMode] = useState(saved.mode || "login");
+  const [f, setF] = useState({ name: saved.name || "", email: saved.email || "", password: "" });
   const [err, setErr] = useState("");
+  // Keep name/email across a reload. The password is deliberately never stored.
+  useEffect(() => { try { sessionStorage.setItem("tt_auth", JSON.stringify({ mode, name: f.name, email: f.email })); } catch {} }, [mode, f.name, f.email]);
   const submit = async () => {
     try {
       const r = await api(`/auth/${mode}`, f);
+      try { sessionStorage.removeItem("tt_auth"); } catch {}
       localStorage.setItem("tt_token", r.token); localStorage.setItem("tt_name", r.name); onDone(r.name);
     } catch (e) { setErr(e.message); }
   };
@@ -277,9 +283,9 @@ function Auth({ onDone }) {
       <div className="logo auth-logo">T<b>T</b><small>Search Made Easy</small></div>
       <div className="card auth-card">
         <h3>{mode === "login" ? "Log in" : "Create account"}</h3>
-        {mode === "register" && <input placeholder="Full name" onChange={(e) => setF({ ...f, name: e.target.value })} />}
-        <input className="mt-8" placeholder="Email" onChange={(e) => setF({ ...f, email: e.target.value })} />
-        <input className="my-8" type="password" placeholder="Password" onChange={(e) => setF({ ...f, password: e.target.value })} />
+        {mode === "register" && <input placeholder="Full name" autoComplete="name" value={f.name} onChange={(e) => setF({ ...f, name: e.target.value })} />}
+        <input className="mt-8" type="email" placeholder="Email" autoComplete="email" value={f.email} onChange={(e) => setF({ ...f, email: e.target.value })} />
+        <input className="my-8" type="password" placeholder="Password" autoComplete={mode === "login" ? "current-password" : "new-password"} value={f.password} onChange={(e) => setF({ ...f, password: e.target.value })} onKeyDown={(e) => e.key === "Enter" && submit()} />
         {err && <div className="err">{err}</div>}
         <button className="btn" onClick={submit}>{mode === "login" ? "Log in" : "Sign up"}</button>
         <p className="link-orange" onClick={() => setMode(mode === "login" ? "register" : "login")}>{mode === "login" ? "New here? Sign up" : "Have an account? Log in"}</p>

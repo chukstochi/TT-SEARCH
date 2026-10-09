@@ -205,7 +205,6 @@ textarea.ed { min-height: 420px; line-height: 1.6; }
 }
 
 
-
 /* =====================================================================
    05-helpers.css - small helper classes and the university search box.
    Loaded last on purpose, so these always win over the files before it.
@@ -229,10 +228,14 @@ textarea.ed { min-height: 420px; line-height: 1.6; }
 .topic-head { display: flex; justify-content: space-between; }
 .road-status { margin-left: auto; color: var(--mut); }
 
-/* ---------- login page ---------- */
-.auth-hero { min-height: 100vh; }
-.auth-logo { font-size: 28px; }
-.auth-card { max-width: 380px; margin-top: 30px; color: #111; }
+/* ---------- login page (centred on phones, tablets and desktops) ---------- */
+.auth-hero {
+  min-height: 100vh;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  padding: 32px 16px;
+}
+.auth-logo { font-size: 28px; text-align: center; }
+.auth-card { width: 100%; max-width: 380px; margin: 30px auto 0; color: #111; }
 
 /* ---------- university search box ---------- */
 .uni { position: relative; flex: 1; min-width: 180px; }
