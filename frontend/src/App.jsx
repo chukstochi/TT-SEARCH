@@ -91,6 +91,7 @@ export default function App() {
   useEffect(() => {
     const stop = (e) => { const ed = /INPUT|TEXTAREA/.test(e.target.tagName) && !e.target.dataset.nocopy; if (!ed && !(e.type === "selectstart" && /INPUT|TEXTAREA/.test(e.target.tagName))) e.preventDefault(); };
     const key = (e) => {
+      if (!e.key) return; // some mobile keyboards/autofill send key events without a key
       const k = e.key.toLowerCase();
       if ((e.ctrlKey || e.metaKey) && ["c","x","a","s","p","u"].includes(k) && (!/INPUT|TEXTAREA/.test(e.target.tagName) || (e.target.dataset.nocopy && ["c","x"].includes(k)))) e.preventDefault();
       if (e.key === "F12" || ((e.ctrlKey || e.metaKey) && e.shiftKey && ["i","j","c"].includes(k))) e.preventDefault();
