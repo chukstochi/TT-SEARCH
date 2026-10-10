@@ -82,6 +82,7 @@ export default function App() {
   const [check, setCheck] = useState(() => ({ topic: readSaved("tt_check_topic", ""), result: null }));
   const [busy, setBusy] = useState(false);
   const [err, setErr] = useState("");
+  const [menuOpen, setMenuOpen] = useState(false); // phone drawer menu
 
   // keep the form and topic list across reloads
   useEffect(() => { try { sessionStorage.setItem("tt_form", JSON.stringify(form)); } catch {} }, [form]);
@@ -147,9 +148,16 @@ export default function App() {
   return (
     <>
       <div className="wm">{Array(60).fill(`TT • ${name} • `).join("")}</div>
-      <div className="shell"><div className="side">
-        <div className="logo" onClick={() => setView("home")}>T<b>T</b><small>Search Made Easy</small></div>
-        {[["home","Find Topics"],["projects","My Projects"],["library","Library"],["dash","Dashboard"]].map(([k,l]) => <div key={k} className={"si " + (view===k?"on":"")} onClick={() => setView(k)}>{l}</div>)}
+      <div className="shell">
+      <div className="mbar">
+        <div className="logo" onClick={() => setView("home")}>T<b>T</b></div>
+        <button className="burger" aria-label="Open menu" onClick={() => setMenuOpen(true)}>&#9776;</button>
+      </div>
+      <div className={"backdrop " + (menuOpen ? "show" : "")} onClick={() => setMenuOpen(false)} />
+      <div className={"side " + (menuOpen ? "open" : "")}>
+        <button className="close-x" aria-label="Close menu" onClick={() => setMenuOpen(false)}>&#10005;</button>
+        <div className="logo" onClick={() => { setView("home"); setMenuOpen(false); }}>T<b>T</b><small>Search Made Easy</small></div>
+        {[["home","Find Topics"],["projects","My Projects"],["library","Library"],["dash","Dashboard"]].map(([k,l]) => <div key={k} className={"si " + (view===k?"on":"")} onClick={() => { setView(k); setMenuOpen(false); }}>{l}</div>)}
         <div className="si mt-24">{name}</div>
         <div className="si" onClick={() => { localStorage.clear(); sessionStorage.clear(); location.hash = ""; location.reload(); }}>Logout</div>
       </div><div className="main">
